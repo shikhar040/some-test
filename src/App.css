@@ -1,0 +1,16 @@
+.app {
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+.main-content {
+  padding-top: 70px;
+  min-height: calc(100vh - 70px);
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-bottom: 20px;
+  }
+}

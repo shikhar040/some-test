@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOME - Social & Professional Network</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        :root {
+            --primary: #0066FF;
+            --social: #FF2D8E;
+            --professional: #00C896;
+            --dark: #0A0A14;
+            --dark-card: #242430;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0A5BA;
+            --radius-lg: 20px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(26, 26, 36, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFFFFF 0%, #A0A5BA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: var(--dark-card);
+            border-radius: 50px;
+            padding: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mode-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background: #FF4757;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 70px;
+            padding: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--dark-card);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 999;
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            min-width: 60px;
+            position: relative;
+        }
+
+        .nav-btn.active {
+            color: var(--primary);
+            background: rgba(0, 102, 255, 0.1);
+        }
+
+        .nav-btn i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-btn span {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Page Sections */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Feed Toggle */
+        .feed-toggle {
+            display: flex;
+            background: var(--dark-card);
+            border-radius: var(--radius-md);
+            padding: 6px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feed-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .feed-btn.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        /* Stories */
+        .stories {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 16px 0;
+            margin-bottom: 24px;
+        }
+
+        .story {
+            flex: 0 0 auto;
+            width: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .story-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 8px;
+            border: 2px solid var(--primary);
+            padding: 2px;
+        }
+
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .story-name {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Post Cards */
+        .posts {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post-card {
+            background: var(--dark-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 12px;
+        }
+
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-info {
+            flex: 1;
+        }
+
+        .post-author {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .post-title {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 8px;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .post-type {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: var(--primary);
+        }
+
+        .post-content {
+            padding: 16px;
+        }
+
+        .post-text {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .post-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .post-action i {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .post-action span {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .post-action.liked {
+            color: #FF4757;
+        }
+
+        /* Create Post */
+        .create-post {
+            background: var(--dark-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .create-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .create-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 12px;
+        }
+
+        .create-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 16px;
+            resize: none;
+            min-height: 80px;
+            outline: none;
+        }
+
+        .post-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .post-type-select {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .type-option {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .type-option.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .submit-post {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Profile */
+        .profile-header {
+            background: var(--dark-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .profile-avatar-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 16px;
+        }
+
+        .profile-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--dark-card);
+        }
+
+        .change-avatar-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border: 3px solid var(--dark-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .change-avatar-btn i {
+            font-size: 14px;
+            color: white;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .profile-title {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin: 20px 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .profile-btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .profile-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-tabs {
+            display: flex;
+            background: var(--dark-card);
+            border-radius: var(--radius-md);
+            padding: 6px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+        }
+
+        .profile-tab.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        /* Messages */
+        .messages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message-item {
+            background: var(--dark-card);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .message-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 12px;
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message-info {
+            flex: 1;
+        }
+
+        .message-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .message-preview {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Notifications */
+        .notifications-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .notification-item {
+            background: var(--dark-card);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-text {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .notification-text strong {
+            font-weight: 700;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Settings Page */
+        .settings-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .settings-section {
+            background: var(--dark-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-label {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .settings-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .privacy-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .privacy-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+        }
+
+        .privacy-option input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .privacy-label {
+            flex: 1;
+        }
+
+        .privacy-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .privacy-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .danger-zone {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: rgba(255, 71, 87, 0.2);
+        }
+
+        .danger-btn {
+            background: #FF4757;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Image Upload */
+        .image-upload {
+            margin: 20px 0;
+        }
+
+        .upload-area {
+            width: 100%;
+            padding: 60px;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .upload-area p {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .upload-area span {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .image-preview {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            margin-top: 16px;
+            display: none;
+        }
+
+        .image-preview.show {
+            display: block;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--dark-card);
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            main {
+                padding: 16px;
+                padding-bottom: 100px;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+            
+            .profile-stats {
+                gap: 24px;
+            }
+            
+            .stat-value {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">SOME</div>
+        <div class="mode-toggle">
+            <button class="mode-btn active" onclick="setMode('social')">
+                Social
+            </button>
+            <button class="mode-btn" onclick="setMode('professional')">
+                Professional
+            </button>
+        </div>
+        <div class="header-actions">
+            <button class="notification-btn" onclick="toggleNotifications()">
+                <i class="far fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+            <div class="user-avatar" onclick="navigateTo('profile')">
+                <img id="header-avatar" src="https://i.pravatar.cc/300?img=1" alt="User">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Page -->
+        <div id="home-page" class="page active">
+            <h1 class="page-title">Feed</h1>
+            
+            <!-- Stories -->
+            <div class="stories">
+                <div class="story">
+                    <div class="story-avatar">
+                        <img src="https://i.pravatar.cc/300?img=1" alt="You">
+                    </div>
+                    <div class="story-name">You</div>
+                </div>
+                <div class="story">
+                    <div class="story-avatar">
+                        <img src="https://i.pravatar.cc/300?img=5" alt="Sarah">
+                    </div>
+                    <div class="story-name">Sarah</div>
+                </div>
+                <div class="story">
+                    <div class="story-avatar">
+                        <img src="https://i.pravatar.cc/300?img=8" alt="Mike">
+                    </div>
+                    <div class="story-name">Mike</div>
+                </div>
+            </div>
+
+            <!-- Feed Toggle -->
+            <div class="feed-toggle">
+                <button class="feed-btn active" onclick="setFeed('social')">Social</button>
+                <button class="feed-btn" onclick="setFeed('professional')">Professional</button>
+            </div>
+
+            <!-- Posts -->
+            <div class="posts" id="posts-container">
+                <!-- Posts will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Create Post Page -->
+        <div id="create-post-page" class="page">
+            <h1 class="page-title">Create Post</h1>
+            <div class="create-post">
+                <div class="create-header">
+                    <div class="create-avatar">
+                        <img src="https://i.pravatar.cc/300?img=1" alt="You">
+                    </div>
+                    <textarea class="post-input" placeholder="What's on your mind?" id="post-content"></textarea>
+                </div>
+                
+                <!-- Image Upload -->
+                <div class="image-upload">
+                    <input type="file" id="post-image-input" accept="image/*" style="display: none;" onchange="handlePostImageUpload(event)">
+                    <div class="upload-area" onclick="document.getElementById('post-image-input').click()">
+                        <i class="fas fa-image"></i>
+                        <p>Click to upload an image</p>
+                        <span>JPG, PNG up to 10MB</span>
+                    </div>
+                    <img id="post-image-preview" class="image-preview" alt="Image Preview">
+                </div>
+                
+                <div class="post-type-select">
+                    <button class="type-option active" onclick="setPostType('social')">Social</button>
+                    <button class="type-option" onclick="setPostType('professional')">Professional</button>
+                </div>
+                <button class="submit-post" onclick="createPost()">
+                    <i class="fas fa-paper-plane"></i> Post
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile-page" class="page">
+            <div class="profile-header">
+                <div class="profile-avatar-container">
+                    <img id="profile-avatar" src="https://i.pravatar.cc/300?img=1" alt="Alex Johnson" class="profile-avatar">
+                    <div class="change-avatar-btn" onclick="openChangeAvatar()">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <h1 class="profile-name" id="profile-name">Alex Johnson</h1>
+                <p class="profile-title" id="profile-title">Lead Developer @ TechCorp</p>
+                <p id="profile-location" style="color: var(--text-secondary); margin-bottom: 16px;">San Francisco, CA</p>
+                
+                <div class="profile-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="profile-posts-count">128</div>
+                        <div class="stat-label">Posts</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">2.4K</div>
+                        <div class="stat-label">Followers</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">345</div>
+                        <div class="stat-label">Following</div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="profile-btn primary" onclick="openEditProfile()">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                    <button class="profile-btn secondary" onclick="navigateTo('settings')">
+                        <i class="fas fa-cog"></i> Settings
+                    </button>
+                </div>
+            </div>
+
+            <div class="profile-tabs">
+                <button class="profile-tab active" onclick="setProfileTab('social')">Social</button>
+                <button class="profile-tab" onclick="setProfileTab('professional')">Professional</button>
+            </div>
+
+            <div id="social-posts" class="posts">
+                <!-- Social posts will be loaded here -->
+            </div>
+
+            <div id="professional-posts" class="posts hidden">
+                <!-- Professional posts will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Messages Page -->
+        <div id="messages-page" class="page">
+            <h1 class="page-title">Messages</h1>
+            <div class="messages-list">
+                <div class="message-item" onclick="openChat(1)">
+                    <div class="message-avatar">
+                        <img src="https://i.pravatar.cc/300?img=5" alt="Sarah">
+                    </div>
+                    <div class="message-info">
+                        <div class="message-name">Sarah Miller</div>
+                        <div class="message-preview">Are we still on for dinner tomorrow?</div>
+                    </div>
+                    <div class="message-time">10:30 AM</div>
+                </div>
+                <div class="message-item" onclick="openChat(2)">
+                    <div class="message-avatar">
+                        <img src="https://i.pravatar.cc/300?img=8" alt="Mike">
+                    </div>
+                    <div class="message-info">
+                        <div class="message-name">Michael Chen</div>
+                        <div class="message-preview">Great presentation today!</div>
+                    </div>
+                    <div class="message-time">Yesterday</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Page -->
+        <div id="notifications-page" class="page">
+            <h1 class="page-title">Notifications</h1>
+            <div class="notifications-list">
+                <div class="notification-item">
+                    <div class="notification-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <strong>James Wilson</strong> liked your photo
+                        </div>
+                        <div class="notification-time">5 min ago</div>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-icon">
+                        <i class="fas fa-comment"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <strong>TechCorp HR</strong> commented on your achievement
+                        </div>
+                        <div class="notification-time">1 hour ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings-page" class="page">
+            <h1 class="page-title">Settings</h1>
+            
+            <div class="settings-container">
+                <!-- Account Settings -->
+                <div class="settings-section">
+                    <h2 class="settings-title">
+                        <i class="fas fa-user-cog"></i> Account Settings
+                    </h2>
+                    
+                    <div class="settings-item">
+                        <div>
+                            <div class="settings-label">Change Password</div>
+                            <div class="settings-desc">Update your account password</div>
+                        </div>
+                        <button class="profile-btn secondary" onclick="openChangePassword()">Change</button>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div>
+                            <div class="settings-label">Email Notifications</div>
+                            <div class="settings-desc">Receive email notifications</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="email-notifications" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div>
+                            <div class="settings-label">Push Notifications</div>
+                            <div class="settings-desc">Receive push notifications</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="push-notifications" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Privacy Settings -->
+                <div class="settings-section">
+                    <h2 class="settings-title">
+                        <i class="fas fa-lock"></i> Privacy Settings
+                    </h2>
+                    
+                    <div class="settings-item">
+                        <div>
+                            <div class="settings-label">Social Profile Visibility</div>
+                            <div class="settings-desc">Who can see your social posts</div>
+                        </div>
+                    </div>
+                    
+                    <div class="privacy-options">
+                        <label class="privacy-option">
+                            <input type="radio" name="social-privacy" value="public" checked>
+                            <div class="privacy-label">
+                                <div class="privacy-title">Public</div>
+                                <div class="privacy-desc">Everyone can see your social posts</div>
+                            </div>
+                        </label>
+                        
+                        <label class="privacy-option">
+                            <input type="radio" name="social-privacy" value="followers">
+                            <div class="privacy-label">
+                                <div class="privacy-title">Followers Only</div>
+                                <div class="privacy-desc">Only your followers can see</div>
+                            </div>
+                        </label>
+                        
+                        <label class="privacy-option">
+                            <input type="radio" name="social-privacy" value="private">
+                            <div class="privacy-label">
+                                <div class="privacy-title">Private</div>
+                                <div class="privacy-desc">Only you can see</div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-item" style="margin-top: 20px;">
+                        <div>
+                            <div class="settings-label">Professional Profile Visibility</div>
+                            <div class="settings-desc">Who can see your professional info</div>
+                        </div>
+                    </div>
+                    
+                    <div class="privacy-options">
+                        <label class="privacy-option">
+                            <input type="radio" name="professional-privacy" value="public" checked>
+                            <div class="privacy-label">
+                                <div class="privacy-title">Public</div>
+                                <div class="privacy-desc">Everyone can see</div>
+                            </div>
+                        </label>
+                        
+                        <label class="privacy-option">
+                            <input type="radio" name="professional-privacy" value="connections">
+                            <div class="privacy-label">
+                                <div class="privacy-title">Connections Only</div>
+                                <div class="privacy-desc">Only your connections can see</div>
+                            </div>
+                        </label>
+                        
+                        <label class="privacy-option">
+                            <input type="radio" name="professional-privacy" value="recruiters">
+                            <div class="privacy-label">
+                                <div class="privacy-title">Recruiters Only</div>
+                                <div class="privacy-desc">Only recruiters can see</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="settings-section danger-zone">
+                    <h2 class="settings-title" style="color: #FF4757;">
+                        <i class="fas fa-exclamation-triangle"></i> Danger Zone
+                    </h2>
+                    
+                    <div style="text-align: center; padding: 20px 0;">
+                        <button class="danger-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                        <br><br>
+                        <button class="danger-btn" onclick="deleteAccount()">
+                            <i class="fas fa-trash-alt"></i> Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" onclick="navigateTo('home')">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </button>
+        <button class="nav-btn" onclick="navigateTo('notifications')">
+            <i class="far fa-bell"></i>
+            <span>Alerts</span>
+            <span class="notification-badge" style="position: absolute; top: 5px; right: 20px;">3</span>
+        </button>
+        <button class="nav-btn" onclick="navigateTo('create-post')">
+            <i class="fas fa-plus-circle"></i>
+            <span>Create</span>
+        </button>
+        <button class="nav-btn" onclick="navigateTo('messages')">
+            <i class="far fa-comments"></i>
+            <span>Messages</span>
+        </button>
+        <button class="nav-btn" onclick="navigateTo('profile')">
+            <i class="far fa-user"></i>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span>Edit Profile</span>
+                <button class="modal-close" onclick="closeEditProfile()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="edit-name" value="Alex Johnson">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Job Title</label>
+                    <input type="text" class="form-input" id="edit-title" value="Lead Developer @ TechCorp">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Bio</label>
+                    <textarea class="form-textarea" id="edit-bio">Building the future of social networking | Mentor | Tech enthusiast</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <input type="text" class="form-input" id="edit-location" value="San Francisco, CA">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="profile-btn secondary" onclick="closeEditProfile()">Cancel</button>
+                <button class="profile-btn primary" onclick="saveProfile()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Avatar Modal -->
+    <div id="change-avatar-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span>Change Profile Picture</span>
+                <button class="modal-close" onclick="closeChangeAvatar()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="image-upload">
+                    <input type="file" id="avatar-input" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+                    <div class="upload-area" onclick="document.getElementById('avatar-input').click()">
+                        <i class="fas fa-camera"></i>
+                        <p>Click to upload a new profile picture</p>
+                        <span>JPG, PNG up to 5MB</span>
+                    </div>
+                    <img id="avatar-preview" class="image-preview" alt="Avatar Preview" style="display: none;">
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <p style="color: var(--text-secondary); margin-bottom: 16px;">Or choose from default avatars:</p>
+                    <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                        <img src="https://i.pravatar.cc/300?img=1" alt="Avatar 1" class="profile-avatar" style="width: 60px; height: 60px; cursor: pointer;" onclick="selectDefaultAvatar(1)">
+                        <img src="https://i.pravatar.cc/300?img=5" alt="Avatar 2" class="profile-avatar" style="width: 60px; height: 60px; cursor: pointer;" onclick="selectDefaultAvatar(5)">
+                        <img src="https://i.pravatar.cc/300?img=8" alt="Avatar 3" class="profile-avatar" style="width: 60px; height: 60px; cursor: pointer;" onclick="selectDefaultAvatar(8)">
+                        <img src="https://i.pravatar.cc/300?img=11" alt="Avatar 4" class="profile-avatar" style="width: 60px; height: 60px; cursor: pointer;" onclick="selectDefaultAvatar(11)">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="profile-btn secondary" onclick="closeChangeAvatar()">Cancel</button>
+                <button class="profile-btn primary" onclick="saveAvatar()">Save Avatar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="change-password-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span>Change Password</span>
+                <button class="modal-close" onclick="closeChangePassword()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" class="form-input" id="current-password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-input" id="new-password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-input" id="confirm-password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="profile-btn secondary" onclick="closeChangePassword()">Cancel</button>
+                <button class="profile-btn primary" onclick="savePassword()">Change Password</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        const samplePosts = [
+            {
+                id: 1,
+                type: 'social',
+                author: {
+                    name: 'Sarah Miller',
+                    avatar: 'https://i.pravatar.cc/300?img=5',
+                    title: 'UX Designer @ Apple'
+                },
+                time: '2h ago',
+                content: 'Just finished an amazing weekend retreat with the team! 🏔️ Nothing better than fresh mountain air and great company.',
+                image: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                likes: 342,
+                comments: 28,
+                shares: 12,
+                liked: false
+            },
+            {
+                id: 2,
+                type: 'professional',
+                author: {
+                    name: 'Michael Chen',
+                    avatar: 'https://i.pravatar.cc/300?img=8',
+                    title: 'Senior Architect @ AWS'
+                },
+                time: '5h ago',
+                content: 'Just completed AWS Solutions Architect Professional certification! 🎯 Ready to architect even more scalable solutions.',
+                image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                likes: 892,
+                comments: 45,
+                shares: 32,
+                liked: true
+            }
+        ];
+
+        let currentMode = 'social';
+        let currentFeed = 'social';
+        let currentPostType = 'social';
+        let currentProfileTab = 'social';
+        let userPosts = JSON.parse(localStorage.getItem('userPosts')) || [];
+        let selectedAvatar = null;
+        let postImageData = null;
+
+        // Initialize the app
+        function initApp() {
+            loadPosts();
+            loadProfilePosts();
+            loadSettings();
+        }
+
+        // Navigation
+        function navigateTo(page) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(`${page}-page`).classList.add('active');
+            
+            // Update active nav button
+            const navBtn = document.querySelector(`.nav-btn[onclick*="${page}"]`);
+            if (navBtn) {
+                navBtn.classList.add('active');
+            }
+            
+            // Update header title
+            const titles = {
+                'home': 'Feed',
+                'create-post': 'Create Post',
+                'profile': 'Profile',
+                'messages': 'Messages',
+                'notifications': 'Notifications',
+                'settings': 'Settings'
+            };
+            document.querySelector('.page-title').textContent = titles[page];
+        }
+
+        // Set mode (Social/Professional)
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.mode-btn[onclick*="${mode}"]`).classList.add('active');
+            
+            // If on home page, update feed
+            if (document.getElementById('home-page').classList.contains('active')) {
+                setFeed(mode);
+            }
+        }
+
+        // Set feed type
+        function setFeed(feed) {
+            currentFeed = feed;
+            document.querySelectorAll('.feed-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.feed-btn[onclick*="${feed}"]`).classList.add('active');
+            loadPosts();
+        }
+
+        // Set post type for creation
+        function setPostType(type) {
+            currentPostType = type;
+            document.querySelectorAll('.type-option').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.type-option[onclick*="${type}"]`).classList.add('active');
+        }
+
+        // Set profile tab
+        function setProfileTab(tab) {
+            currentProfileTab = tab;
+            document.querySelectorAll('.profile-tab').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.profile-tab[onclick*="${tab}"]`).classList.add('active');
+            
+            // Show/hide content
+            document.getElementById('social-posts').classList.toggle('hidden', tab !== 'social');
+            document.getElementById('professional-posts').classList.toggle('hidden', tab !== 'professional');
+        }
+
+        // Load posts
+        function loadPosts() {
+            const postsContainer = document.getElementById('posts-container');
+            const filteredPosts = [...samplePosts, ...userPosts].filter(post => post.type === currentFeed);
+            
+            postsContainer.innerHTML = '';
+            
+            if (filteredPosts.length === 0) {
+                postsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="far fa-newspaper" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 16px;"></i>
+                        <p style="color: var(--text-secondary);">No ${currentFeed} posts yet. Be the first to create one!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredPosts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'post-card';
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-avatar">
+                            <img src="${post.author.avatar}" alt="${post.author.name}">
+                        </div>
+                        <div class="post-info">
+                            <div class="post-author">${post.author.name}</div>
+                            <div class="post-title">${post.author.title}</div>
+                            <div class="post-meta">
+                                <span class="post-time">${post.time}</span>
+                                <span class="post-type">${post.type}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p class="post-text">${post.content}</p>
+                        ${post.image ? `<img src="${post.image}" alt="Post" class="post-image">` : ''}
+                    </div>
+                    <div class="post-actions">
+                        <button class="post-action ${post.liked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                            <i class="fas fa-heart"></i>
+                            <span>${post.likes}</span>
+                        </button>
+                        <button class="post-action">
+                            <i class="far fa-comment"></i>
+                            <span>${post.comments}</span>
+                        </button>
+                        <button class="post-action">
+                            <i class="far fa-share-square"></i>
+                            <span>${post.shares}</span>
+                        </button>
+                        ${post.type === 'professional' ? `
+                            <button class="post-action">
+                                <i class="fas fa-handshake"></i>
+                                <span>Connect</span>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        }
+
+        // Load profile posts
+        function loadProfilePosts() {
+            const socialPostsContainer = document.getElementById('social-posts');
+            const professionalPostsContainer = document.getElementById('professional-posts');
+            
+            const socialPosts = userPosts.filter(post => post.type === 'social');
+            const professionalPosts = userPosts.filter(post => post.type === 'professional');
+            
+            // Update post count
+            document.getElementById('profile-posts-count').textContent = userPosts.length + 128;
+            
+            // Load social posts
+            socialPostsContainer.innerHTML = '';
+            if (socialPosts.length === 0) {
+                socialPostsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 40px; background: var(--dark-card); border-radius: var(--radius-md);">
+                        <i class="far fa-newspaper" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 16px;"></i>
+                        <p style="color: var(--text-secondary);">No social posts yet. Create your first post!</p>
+                    </div>
+                `;
+            } else {
+                socialPosts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.className = 'post-card';
+                    postElement.innerHTML = `
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <img src="${post.author.avatar}" alt="${post.author.name}">
+                            </div>
+                            <div class="post-info">
+                                <div class="post-author">${post.author.name}</div>
+                                <div class="post-title">${post.author.title}</div>
+                                <div class="post-meta">
+                                    <span class="post-time">${post.time}</span>
+                                    <span class="post-type">${post.type}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p class="post-text">${post.content}</p>
+                            ${post.image ? `<img src="${post.image}" alt="Post" class="post-image">` : ''}
+                        </div>
+                    </div>
+                    `;
+                    socialPostsContainer.appendChild(postElement);
+                });
+            }
+            
+            // Load professional posts
+            professionalPostsContainer.innerHTML = `
+                <div style="background: var(--dark-card); border-radius: var(--radius-md); padding: 24px;">
+                    <h3 style="margin-bottom: 16px;">Professional Achievements</h3>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.05); border-radius: var(--radius-md);">
+                            <div style="width: 50px; height: 50px; background: var(--professional); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-certificate" style="font-size: 24px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; margin-bottom: 4px;">AWS Solutions Architect</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">Professional certification in cloud architecture</div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Dec 2023</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.05); border-radius: var(--radius-md);">
+                            <div style="width: 50px; height: 50px; background: var(--professional); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-briefcase" style="font-size: 24px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; margin-bottom: 4px;">Senior Developer Promotion</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">Promoted to Lead Developer at TechCorp</div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Nov 2023</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Handle post image upload
+        function handlePostImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    postImageData = e.target.result;
+                    const preview = document.getElementById('post-image-preview');
+                    preview.src = postImageData;
+                    preview.classList.add('show');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Create new post
+        function createPost() {
+            const content = document.getElementById('post-content').value.trim();
+            if (!content && !postImageData) {
+                alert('Please write something or upload an image before posting!');
+                return;
+            }
+            
+            const newPost = {
+                id: Date.now(),
+                type: currentPostType,
+                author: {
+                    name: document.getElementById('profile-name').textContent,
+                    avatar: document.getElementById('profile-avatar').src,
+                    title: document.getElementById('profile-title').textContent
+                },
+                time: 'Just now',
+                content: content,
+                image: postImageData || (currentPostType === 'social' 
+                    ? 'https://images.unsplash.com/photo-1542744094-3a31f272c490?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+                    : 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
+                likes: 0,
+                comments: 0,
+                shares: 0,
+                liked: false
+            };
+            
+            userPosts.unshift(newPost);
+            localStorage.setItem('userPosts', JSON.stringify(userPosts));
+            
+            // Clear input and preview
+            document.getElementById('post-content').value = '';
+            document.getElementById('post-image-preview').classList.remove('show');
+            postImageData = null;
+            
+            // Navigate to home and reload posts
+            navigateTo('home');
+            loadPosts();
+            loadProfilePosts();
+            
+            alert('Post created successfully!');
+        }
+
+        // Toggle like on post
+        function toggleLike(postId) {
+            const post = [...samplePosts, ...userPosts].find(p => p.id === postId);
+            if (post) {
+                post.liked = !post.liked;
+                post.likes += post.liked ? 1 : -1;
+                localStorage.setItem('userPosts', JSON.stringify(userPosts));
+                loadPosts();
+            }
+        }
+
+        // Edit profile functions
+        function openEditProfile() {
+            document.getElementById('edit-profile-modal').classList.add('active');
+        }
+
+        function closeEditProfile() {
+            document.getElementById('edit-profile-modal').classList.remove('active');
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('edit-name').value;
+            const title = document.getElementById('edit-title').value;
+            const bio = document.getElementById('edit-bio').value;
+            const location = document.getElementById('edit-location').value;
+            
+            // Update profile display
+            document.getElementById('profile-name').textContent = name;
+            document.getElementById('profile-title').textContent = title;
+            document.getElementById('profile-location').textContent = location;
+            
+            // Update author info in user posts
+            userPosts.forEach(post => {
+                post.author.name = name;
+                post.author.title = title;
+            });
+            localStorage.setItem('userPosts', JSON.stringify(userPosts));
+            
+            closeEditProfile();
+            alert('Profile updated successfully!');
+        }
+
+        // Avatar functions
+        function openChangeAvatar() {
+            selectedAvatar = null;
+            document.getElementById('avatar-preview').style.display = 'none';
+            document.getElementById('change-avatar-modal').classList.add('active');
+        }
+
+        function closeChangeAvatar() {
+            document.getElementById('change-avatar-modal').classList.remove('active');
+        }
+
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedAvatar = e.target.result;
+                    const preview = document.getElementById('avatar-preview');
+                    preview.src = selectedAvatar;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function selectDefaultAvatar(imgNum) {
+            selectedAvatar = `https://i.pravatar.cc/300?img=${imgNum}`;
+            const preview = document.getElementById('avatar-preview');
+            preview.src = selectedAvatar;
+            preview.style.display = 'block';
+        }
+
+        function saveAvatar() {
+            if (!selectedAvatar) {
+                alert('Please select or upload an avatar!');
+                return;
+            }
+            
+            // Update avatar in all places
+            document.getElementById('profile-avatar').src = selectedAvatar;
+            document.getElementById('header-avatar').src = selectedAvatar;
+            
+            // Update avatar in user posts
+            userPosts.forEach(post => {
+                post.author.avatar = selectedAvatar;
+            });
+            localStorage.setItem('userPosts', JSON.stringify(userPosts));
+            
+            closeChangeAvatar();
+            alert('Profile picture updated successfully!');
+        }
+
+        // Password functions
+        function openChangePassword() {
+            document.getElementById('change-password-modal').classList.add('active');
+        }
+
+        function closeChangePassword() {
+            document.getElementById('change-password-modal').classList.remove('active');
+        }
+
+        function savePassword() {
+            const currentPass = document.getElementById('current-password').value;
+            const newPass = document.getElementById('new-password').value;
+            const confirmPass = document.getElementById('confirm-password').value;
+            
+            if (!currentPass || !newPass || !confirmPass) {
+                alert('Please fill all password fields!');
+                return;
+            }
+            
+            if (newPass !== confirmPass) {
+                alert('New passwords do not match!');
+                return;
+            }
+            
+            if (newPass.length < 6) {
+                alert('Password must be at least 6 characters!');
+                return;
+            }
+            
+            // In a real app, this would send to server
+            closeChangePassword();
+            document.getElementById('current-password').value = '';
+            document.getElementById('new-password').value = '';
+            document.getElementById('confirm-password').value = '';
+            alert('Password changed successfully!');
+        }
+
+        // Settings functions
+        function loadSettings() {
+            // Load saved settings from localStorage
+            const savedSettings = JSON.parse(localStorage.getItem('userSettings')) || {};
+            
+            // Apply settings
+            if (savedSettings.emailNotifications !== undefined) {
+                document.getElementById('email-notifications').checked = savedSettings.emailNotifications;
+            }
+            if (savedSettings.pushNotifications !== undefined) {
+                document.getElementById('push-notifications').checked = savedSettings.pushNotifications;
+            }
+            if (savedSettings.socialPrivacy) {
+                document.querySelector(`input[name="social-privacy"][value="${savedSettings.socialPrivacy}"]`).checked = true;
+            }
+            if (savedSettings.professionalPrivacy) {
+                document.querySelector(`input[name="professional-privacy"][value="${savedSettings.professionalPrivacy}"]`).checked = true;
+            }
+        }
+
+        function saveSettings() {
+            const settings = {
+                emailNotifications: document.getElementById('email-notifications').checked,
+                pushNotifications: document.getElementById('push-notifications').checked,
+                socialPrivacy: document.querySelector('input[name="social-privacy"]:checked').value,
+                professionalPrivacy: document.querySelector('input[name="professional-privacy"]:checked').value
+            };
+            
+            localStorage.setItem('userSettings', JSON.stringify(settings));
+            alert('Settings saved!');
+        }
+
+        // Save settings when toggles change
+        document.getElementById('email-notifications').addEventListener('change', saveSettings);
+        document.getElementById('push-notifications').addEventListener('change', saveSettings);
+        document.querySelectorAll('input[name="social-privacy"]').forEach(input => {
+            input.addEventListener('change', saveSettings);
+        });
+        document.querySelectorAll('input[name="professional-privacy"]').forEach(input => {
+            input.addEventListener('change', saveSettings);
+        });
+
+        // Account functions
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Logged out successfully!');
+                // In a real app, this would clear session and redirect to login
+            }
+        }
+
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone!')) {
+                if (prompt('Type "DELETE" to confirm:') === 'DELETE') {
+                    alert('Account deleted successfully!');
+                    // In a real app, this would delete from server
+                }
+            }
+        }
+
+        // Toggle notifications dropdown
+        function toggleNotifications() {
+            navigateTo('notifications');
+        }
+
+        // Open chat
+        function openChat(chatId) {
+            alert(`Opening chat ${chatId}...`);
+            // In a real app, this would open the chat interface
+        }
+
+        // Initialize the app when page loads
+        window.onload = initApp;
+    </script>
+</body>
+</html>
