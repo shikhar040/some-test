@@ -13,7 +13,7 @@ import UserProfile from './pages/UserProfile';
 import './App.css';
 
 function App() {
-  const { currentPage } = useApp();
+  const { currentPage, isChatOpen } = useApp();
 
   const renderPage = () => {
     switch (currentPage) {
@@ -44,7 +44,7 @@ function App() {
       <main className="main-content fade-in">
         {renderPage()}
       </main>
-      <BottomNav />
+      {!isChatOpen && <BottomNav />}
     </div>
   );
 }

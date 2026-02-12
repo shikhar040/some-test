@@ -13,6 +13,7 @@ export const useApp = () => {
 export const AppProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState('home');
   const [currentMode, setCurrentMode] = useState('social');
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -400,7 +401,8 @@ export const AppProvider = ({ children }) => {
             text: 'Yes! Just reviewed them. Looking pretty comprehensive.',
             sender: 'Alex Morgan',
             timestamp: new Date(Date.now() - 7000000).toISOString(),
-            isOwn: true
+            isOwn: true,
+            status: 'delivered'
           },
           {
             id: '1-3',
@@ -414,7 +416,8 @@ export const AppProvider = ({ children }) => {
             text: 'It\'ll be tight, but I think we can make it if we prioritize the core features first',
             sender: 'Alex Morgan',
             timestamp: new Date(Date.now() - 6600000).toISOString(),
-            isOwn: true
+            isOwn: true,
+            status: 'received'
           },
           {
             id: '1-5',
@@ -428,7 +431,8 @@ export const AppProvider = ({ children }) => {
             text: 'Sounds good! I\'ll prepare a draft schedule tonight',
             sender: 'Alex Morgan',
             timestamp: new Date(Date.now() - 6200000).toISOString(),
-            isOwn: true
+            isOwn: true,
+            status: 'sent'
           },
           {
             id: '1-7',
@@ -451,7 +455,8 @@ export const AppProvider = ({ children }) => {
             text: 'Of course! The new interface looks amazing 🎨',
             sender: 'Alex Morgan',
             timestamp: new Date(Date.now() - 14200000).toISOString(),
-            isOwn: true
+            isOwn: true,
+            status: 'delivered'
           },
           {
             id: '2-3',
@@ -472,7 +477,8 @@ export const AppProvider = ({ children }) => {
             text: 'Can\'t wait to see the final version! When can you share it?',
             sender: 'Alex Morgan',
             timestamp: new Date(Date.now() - 7200000).toISOString(),
-            isOwn: true
+            isOwn: true,
+            status: 'received'
           },
           {
             id: '2-6',
@@ -488,7 +494,8 @@ export const AppProvider = ({ children }) => {
             text: 'Hey! How did the user testing session go?',
             sender: 'Alex Morgan',
             timestamp: new Date(Date.now() - 21600000).toISOString(),
-            isOwn: true
+            isOwn: true,
+            status: 'delivered'
           },
           {
             id: '3-2',
@@ -509,7 +516,8 @@ export const AppProvider = ({ children }) => {
             text: 'That\'s fantastic news! Any pain points we should address?',
             sender: 'Alex Morgan',
             timestamp: new Date(Date.now() - 21000000).toISOString(),
-            isOwn: true
+            isOwn: true,
+            status: 'sent'
           },
           {
             id: '3-5',
@@ -532,7 +540,8 @@ export const AppProvider = ({ children }) => {
             text: 'Absolutely! I\'m interested in hearing more about your product vision',
             sender: 'Alex Morgan',
             timestamp: new Date(Date.now() - 86200000).toISOString(),
-            isOwn: true
+            isOwn: true,
+            status: 'delivered'
           },
           {
             id: '4-3',
@@ -555,7 +564,8 @@ export const AppProvider = ({ children }) => {
             text: 'Perfect! I\'ll review it this afternoon',
             sender: 'Alex Morgan',
             timestamp: new Date(Date.now() - 172600000).toISOString(),
-            isOwn: true
+            isOwn: true,
+            status: 'received'
           },
           {
             id: '5-3',
@@ -569,7 +579,8 @@ export const AppProvider = ({ children }) => {
             text: 'That\'s great to hear! Especially the conversion rate improvement',
             sender: 'Alex Morgan',
             timestamp: new Date(Date.now() - 172200000).toISOString(),
-            isOwn: true
+            isOwn: true,
+            status: 'delivered'
           }
         ]
       };
@@ -914,7 +925,8 @@ export const AppProvider = ({ children }) => {
       text: messageText,
       sender: userProfile.name,
       timestamp: new Date().toISOString(),
-      isOwn: true
+      isOwn: true,
+      status: 'delivered'
     };
 
     setConversations(prev => ({
@@ -981,6 +993,8 @@ export const AppProvider = ({ children }) => {
     setCurrentPage,
     currentMode,
     setCurrentMode,
+    isChatOpen,
+    setIsChatOpen,
     posts,
     addPost,
     toggleLike,

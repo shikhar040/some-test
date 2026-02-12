@@ -5,8 +5,12 @@ import './ChatWindow.css';
 const ChatWindow = ({ contact, onClose }) => {
   const { conversations, sendMessage, userProfile } = useApp();
   const [messageText, setMessageText] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  const commonEmojis = ['😀', '😂', '😍', '🥰', '😊', '😎', '🤔', '😢', '😭', '😡', '👍', '👎', '❤️', '🔥', '✨', '🎉'];
 
   const conversation = conversations[contact.id] || [];
 
@@ -24,6 +28,43 @@ const ChatWindow = ({ contact, onClose }) => {
     if (messageText.trim()) {
       sendMessage(contact.id, messageText);
       setMessageText('');
+      setShowEmojiPicker(false);
+    }
+  };
+
+  const handleEmojiClick = (emoji) => {
+    setMessageText(messageText + emoji);
+    inputRef.current?.focus();
+  };
+
+  const handleAttachment = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Handle file attachment - for now just show filename
+      setMessageText(messageText + ` 📎 ${file.name}`);
+    }
+  };
+
+  const getMessageStatus = (msg) => {
+    // Own messages: 🙁 (sent), 😐 (received), 🙂 (delivered)
+    if (!msg.isOwn) return null;
+    return msg.status || 'delivered'; // default to delivered
+  };
+
+  const getStatusEmoji = (status) => {
+    switch(status) {
+      case 'sent':
+        return '🙁';
+      case 'received':
+        return '😐';
+      case 'delivered':
+        return '🙂';
+      default:
+        return '🙂';
     }
   };
 
@@ -111,7 +152,14 @@ const ChatWindow = ({ contact, onClose }) => {
                       <div key={msg.id} className="message-bubble">
                         <p className="message-text">{msg.text}</p>
                         {msgIndex === group.messages.length - 1 && (
-                          <span className="message-time">{formatTime(msg.timestamp)}</span>
+                          <div className="message-footer">
+                            <span className="message-time">{formatTime(msg.timestamp)}</span>
+                            {getMessageStatus(msg) && (
+                              <span className="message-status" title={getMessageStatus(msg)}>
+                                {getStatusEmoji(getMessageStatus(msg))}
+                              </span>
+                            )}
+                          </div>
                         )}
                       </div>
                     ))}
@@ -131,10 +179,22 @@ const ChatWindow = ({ contact, onClose }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="chat-input-container">
-          <button type="button" className="btn-icon">
-            <i className="fas fa-plus"></i>
-          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            style={{ display: 'none' }}
+            onChange={handleFileSelect}
+            accept="image/*,video/*,application/pdf"
+          />
           <div className="chat-input-wrapper">
+            <button 
+              type="button" 
+              className="btn-icon-inline"
+              onClick={handleAttachment}
+              title="Attach file"
+            >
+              <i className="fas fa-paperclip"></i>
+            </button>
             <input
               ref={inputRef}
               type="text"
@@ -143,10 +203,29 @@ const ChatWindow = ({ contact, onClose }) => {
               placeholder="Type a message..."
               className="chat-input"
             />
-            <button type="button" className="btn-emoji">
+            <button 
+              type="button" 
+              className="btn-emoji"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              title="Add emoji"
+            >
               <i className="far fa-face-smile"></i>
             </button>
           </div>
+          {showEmojiPicker && (
+            <div className="emoji-picker">
+              {commonEmojis.map((emoji, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="emoji-btn"
+                  onClick={() => handleEmojiClick(emoji)}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          )}
           <button
             type="submit"
             className="btn-send-message"

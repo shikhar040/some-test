@@ -4,15 +4,17 @@ import ChatWindow from '../components/ChatWindow';
 import './Messages.css';
 
 const Messages = () => {
-  const { messages } = useApp();
+  const { messages, setIsChatOpen } = useApp();
   const [selectedContact, setSelectedContact] = useState(null);
 
   const handleChatOpen = (message) => {
     setSelectedContact(message);
+    setIsChatOpen(true);
   };
 
   const handleChatClose = () => {
     setSelectedContact(null);
+    setIsChatOpen(false);
   };
 
   return (
