@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
+import CommentSection from './CommentSection';
 import './PostCard.css';
 
 const PostCard = ({ post }) => {
-  const { toggleLike, userProfile, deletePost } = useApp();
+  const { toggleLike, userProfile, deletePost, viewUserProfile } = useApp();
+  const [showComments, setShowComments] = useState(false);
   const isOwnPost = post.author === userProfile.name;
+
+  const handleAuthorClick = (e) => {
+    e.stopPropagation();
+    if (post.authorId && post.authorId !== userProfile.id) {
+      viewUserProfile(post.authorId);
+    }
+  };
 
   return (
     <div className="post-card glass-card">
       <div className="post-header">
-        <div className="post-author">
+        <div className="post-author" onClick={handleAuthorClick} style={{ cursor: post.authorId && post.authorId !== userProfile.id ? 'pointer' : 'default' }}>
           <img src={post.avatar} alt={post.author} className="post-avatar" />
           <div className="post-meta">
             <h4 className="author-name">{post.author}</h4>
@@ -58,7 +67,10 @@ const PostCard = ({ post }) => {
           <i className={`${post.liked ? 'fas' : 'far'} fa-heart`}></i>
           <span>Like</span>
         </button>
-        <button className="action-btn">
+        <button
+          className="action-btn"
+          onClick={() => setShowComments(!showComments)}
+        >
           <i className="far fa-comment"></i>
           <span>Comment</span>
         </button>
@@ -67,6 +79,8 @@ const PostCard = ({ post }) => {
           <span>Share</span>
         </button>
       </div>
+
+      <CommentSection postId={post.id} initiallyExpanded={showComments} />
     </div>
   );
 };

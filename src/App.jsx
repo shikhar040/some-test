@@ -8,6 +8,8 @@ import CreatePost from './pages/CreatePost';
 import Messages from './pages/Messages';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import Search from './pages/Search';
+import UserProfile from './pages/UserProfile';
 import './App.css';
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
     switch (currentPage) {
       case 'home':
         return <Home />;
+      case 'search':
+        return <Search />;
       case 'notifications':
         return <Notifications />;
       case 'create':
@@ -25,6 +29,8 @@ function App() {
         return <Messages />;
       case 'profile':
         return <Profile />;
+      case 'userProfile':
+        return <UserProfile />;
       case 'settings':
         return <Settings />;
       default:

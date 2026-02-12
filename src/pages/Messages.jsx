@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
+import ChatWindow from '../components/ChatWindow';
 import './Messages.css';
 
 const Messages = () => {
   const { messages } = useApp();
+  const [selectedContact, setSelectedContact] = useState(null);
 
-  const handleChatOpen = (user) => {
-    alert(`Opening chat with ${user}`);
+  const handleChatOpen = (message) => {
+    setSelectedContact(message);
+  };
+
+  const handleChatClose = () => {
+    setSelectedContact(null);
   };
 
   return (
@@ -33,7 +39,7 @@ const Messages = () => {
               <div
                 key={message.id}
                 className="message-item glass-card"
-                onClick={() => handleChatOpen(message.user)}
+                onClick={() => handleChatOpen(message)}
               >
                 <div className="message-avatar">
                   <img src={message.avatar} alt={message.user} />
@@ -70,6 +76,10 @@ const Messages = () => {
           )}
         </div>
       </div>
+
+      {selectedContact && (
+        <ChatWindow contact={selectedContact} onClose={handleChatClose} />
+      )}
     </div>
   );
 };

@@ -8,6 +8,7 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState('social');
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [showCoverModal, setShowCoverModal] = useState(false);
   const [editForm, setEditForm] = useState({
     name: userProfile.name,
     title: userProfile.title,
@@ -15,7 +16,9 @@ const Profile = () => {
     bio: userProfile.bio
   });
   const [customAvatar, setCustomAvatar] = useState(null);
+  const [customCover, setCustomCover] = useState(null);
   const fileInputRef = useRef(null);
+  const coverInputRef = useRef(null);
 
   const presetAvatars = [
     'https://i.pravatar.cc/150?img=33',
@@ -24,7 +27,18 @@ const Profile = () => {
     'https://i.pravatar.cc/150?img=47'
   ];
 
-  const userPosts = posts.filter(post => post.author === userProfile.name);
+  const presetCovers = [
+    'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200',
+    'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200',
+    'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1200',
+    'https://images.unsplash.com/photo-1550439062-609e1531270e?w=1200',
+    'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200',
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200'
+  ];
+
+  const userPosts = posts.filter(post => 
+    post.authorId === userProfile.id || post.author === userProfile.name
+  );
   const socialPosts = userPosts.filter(post => post.type === 'social');
   const professionalPosts = userPosts.filter(post => post.type === 'professional');
 
@@ -54,11 +68,41 @@ const Profile = () => {
     }
   };
 
+  const handleCoverSelect = (cover) => {
+    updateProfile({ coverImage: cover });
+    setShowCoverModal(false);
+  };
+
+  const handleCustomCover = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCustomCover(e.target.result);
+        updateProfile({ coverImage: e.target.result });
+        setShowCoverModal(false);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="profile-page">
       <div className="container">
         <div className="profile-header glass-card">
-          <div className="profile-cover"></div>
+          <div 
+            className="profile-cover"
+            style={{
+              backgroundImage: userProfile.coverImage ? `url(${userProfile.coverImage})` : 'linear-gradient(135deg, var(--primary), var(--secondary), var(--professional))'
+            }}
+          >
+            <button
+              className="change-cover-btn"
+              onClick={() => setShowCoverModal(true)}
+            >
+              <i className="fas fa-camera"></i>
+            </button>
+          </div>
           <div className="profile-info">
             <div className="profile-avatar-container">
               <img
@@ -256,6 +300,52 @@ const Profile = () => {
                       onClick={() => handleAvatarSelect(avatar)}
                     >
                       <img src={avatar} alt={`Avatar ${index + 1}`} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showCoverModal && (
+        <div className="modal-overlay" onClick={() => setShowCoverModal(false)}>
+          <div className="modal glass-card slide-up" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Change Cover Photo</h2>
+              <button
+                className="btn-icon"
+                onClick={() => setShowCoverModal(false)}
+              >
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <div className="avatar-options">
+              <button
+                className="btn btn-primary upload-btn"
+                onClick={() => coverInputRef.current?.click()}
+              >
+                <i className="fas fa-upload"></i>
+                <span>Upload Custom Photo</span>
+              </button>
+              <input
+                ref={coverInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleCustomCover}
+                style={{ display: 'none' }}
+              />
+              <div className="preset-avatars">
+                <p className="preset-label">Or choose a preset:</p>
+                <div className="cover-grid">
+                  {presetCovers.map((cover, index) => (
+                    <button
+                      key={index}
+                      className="cover-option"
+                      onClick={() => handleCoverSelect(cover)}
+                    >
+                      <img src={cover} alt={`Cover ${index + 1}`} />
                     </button>
                   ))}
                 </div>

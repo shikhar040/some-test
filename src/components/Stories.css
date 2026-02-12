@@ -1,6 +1,41 @@
 .stories-container {
   margin-bottom: 20px;
   padding: 0 20px;
+  position: relative;
+}
+
+.story-success-toast {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 8px 24px rgba(46, 204, 113, 0.4);
+  z-index: 100;
+  animation: toastSlide 0.3s ease;
+}
+
+@keyframes toastSlide {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.story-success-toast i {
+  font-size: 1.1rem;
 }
 
 .stories-scroll {
@@ -39,6 +74,15 @@
 
 .story-item.your-story .story-ring {
   background: linear-gradient(135deg, var(--text-secondary), var(--text-muted));
+}
+
+.story-item.your-story:hover .story-ring {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.story-item.your-story:hover .add-story-btn {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(75, 123, 236, 0.6);
 }
 
 .story-avatar {
@@ -108,4 +152,114 @@
   .story-name {
     font-size: 11px;
   }
+}
+
+/* Viewed stories */
+.story-item.viewed .story-ring {
+  background: linear-gradient(135deg, var(--text-muted), var(--text-secondary));
+  opacity: 0.6;
+}
+
+.story-item.viewed .story-name {
+  color: var(--text-secondary);
+}
+
+/* Story Options Modal */
+.story-options-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+  padding: 20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.story-options-modal {
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+  animation: slideUp 0.3s ease;
+}
+
+.story-options-modal h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.story-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.story-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.story-option-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
+  transform: translateX(4px);
+}
+
+.story-option-btn i {
+  font-size: 1.2rem;
+  color: var(--primary);
+}
+
+.btn-cancel {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
 }

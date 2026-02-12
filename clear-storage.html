@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear LocalStorage</title>
+</head>
+<body>
+    <h1>Clear LocalStorage</h1>
+    <p>Click the button below to clear your localStorage and reset the app data.</p>
+    <button onclick="clearStorage()">Clear Storage</button>
+    <p id="message"></p>
+    
+    <script>
+        function clearStorage() {
+            localStorage.removeItem('userPosts');
+            localStorage.removeItem('stories');
+            localStorage.removeItem('postComments');
+            localStorage.removeItem('conversations');
+            localStorage.removeItem('userSettings');
+            localStorage.removeItem('userProfile');
+            
+            document.getElementById('message').textContent = 'Storage cleared! You can now close this page and refresh your app.';
+            document.getElementById('message').style.color = 'green';
+        }
+    </script>
+</body>
+</html>

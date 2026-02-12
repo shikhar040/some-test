@@ -6,13 +6,12 @@ const BottomNav = () => {
   const {
     currentPage,
     setCurrentPage,
-    unreadNotifications,
     unreadMessages
   } = useApp();
 
   const navItems = [
     { id: 'home', icon: 'fa-house', label: 'Home' },
-    { id: 'notifications', icon: 'fa-bell', label: 'Alerts', badge: unreadNotifications },
+    { id: 'search', icon: 'fa-magnifying-glass', label: 'Search' },
     { id: 'create', icon: 'fa-plus', label: 'Create', special: true },
     { id: 'messages', icon: 'fa-comment', label: 'Messages', badge: unreadMessages },
     { id: 'profile', icon: 'fa-user', label: 'Profile' }
